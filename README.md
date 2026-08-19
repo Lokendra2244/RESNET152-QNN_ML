@@ -18,6 +18,7 @@ Because full breast mammograms contain massive amounts of empty space, our pipel
 ### Example Tissue Crops
 
 Below are examples of the isolated tissue crops the network uses to classify the tumors.
+
 | Benign Tumor (Class 1) | Malignant Tumor (Class 0) |
 | :---: | :---: |
 | ![Benign](benign_sample.jpg) | ![Malignant](malignant_sample.jpg) |
@@ -51,8 +52,6 @@ The pipeline is entirely modular and designed to be run sequentially from data e
 
 ![Performance Comparison](Figure_1.png)
 
-The original paper claimed their Hybrid QNN achieved a staggering **97% accuracy**. Our rigorous reproduction using standard datasets acheived very different results regarding peak validation metrics:
-
 | Model Architecture | Starting Val Accuracy | Peak Val Accuracy |
 | :--- | :--- | :--- |
 | **Classical ResNet152** | 50.37% | **76.51%** |
@@ -62,7 +61,6 @@ The original paper claimed their Hybrid QNN achieved a staggering **97% accuracy
 
 1. **Accelerated Convergence:** The Hybrid QNN effectively leverages the pre-trained classical ResNet backbone as a powerful deterministic feature extractor. Because the quantum circuit is fed highly refined spatial features, the hybrid model starts with an exceptionally strong baseline (73.48% validation accuracy at Epoch 0) and reaches its global minimum almost instantly.
 2. **Training Efficiency:** While the classical ResNet requires extensive epoch cycles to slowly optimize its final classification layers, the Hybrid QNN reaches peak performance in a fraction of the optimization steps. This proves a highly compressed 8-qubit quantum layer can match the representational power of a massive classical classifier head.
-3. **The 97% Claim is Unfounded:** Our results suggest that the 97% accuracy claimed in the original paper is unachievable with this architecture on the specific CBIS medical dataset.
 
 ---
 
@@ -96,7 +94,9 @@ In medical machine learning, missing a malignant tumor (False Negative) is vastl
    ```bash
    pip install torch torchvision pandas pennylane matplotlib scikit-learn seaborn
    ```
+
 2. Run the pipeline sequentially:
+
 ```python
    # 1. Prep the Data
    python db_preprocess.py
