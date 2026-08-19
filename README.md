@@ -15,8 +15,13 @@ Because full breast mammograms contain massive amounts of empty space, our pipel
 
 > **Note on Data Access:** To run this repository, you must download the Kaggle JPEG version of the CBIS-DDSM dataset. Extract the downloaded folder and place the `jpeg/` and `csv/` directories inside an `./archive/` folder in the root of this project.
 
-*(Example of extracted tissue crops fed into the network)*
-![Sample Cropped Images](sample_grid.png)
+### Example Tissue Crops
+
+Below are examples of the isolated tissue crops the network uses to classify the tumors.
+| Benign Tumor (Class 1) | Malignant Tumor (Class 0) |
+| :---: | :---: |
+| ![Benign](benign_sample.jpg) | ![Malignant](malignant_sample.jpg) |
+| *Smooth, well-defined edges.* | *Irregular, spiked, or lobulated edges.* |
 
 ---
 
@@ -46,7 +51,7 @@ The pipeline is entirely modular and designed to be run sequentially from data e
 
 ![Performance Comparison](Figure_1.png)
 
-The original paper claimed their Hybrid QNN achieved a staggering **97% accuracy**. Our rigorous reproduction using standard datasets tells a very different story regarding peak validation metrics:
+The original paper claimed their Hybrid QNN achieved a staggering **97% accuracy**. Our rigorous reproduction using standard datasets acheived very different results regarding peak validation metrics:
 
 | Model Architecture | Starting Val Accuracy | Peak Val Accuracy |
 | :--- | :--- | :--- |
@@ -57,7 +62,7 @@ The original paper claimed their Hybrid QNN achieved a staggering **97% accuracy
 
 1. **Accelerated Convergence:** The Hybrid QNN effectively leverages the pre-trained classical ResNet backbone as a powerful deterministic feature extractor. Because the quantum circuit is fed highly refined spatial features, the hybrid model starts with an exceptionally strong baseline (73.48% validation accuracy at Epoch 0) and reaches its global minimum almost instantly.
 2. **Training Efficiency:** While the classical ResNet requires extensive epoch cycles to slowly optimize its final classification layers, the Hybrid QNN reaches peak performance in a fraction of the optimization steps. This proves a highly compressed 8-qubit quantum layer can match the representational power of a massive classical classifier head.
-3. **The 97% Claim is Unfounded:** Our results strongly suggest that the 97% accuracy claimed in the original paper is unachievable with this architecture on a properly balanced, rigorously isolated medical dataset.
+3. **The 97% Claim is Unfounded:** Our results suggest that the 97% accuracy claimed in the original paper is unachievable with this architecture on the specific CBIS medical dataset.
 
 ---
 
@@ -73,16 +78,14 @@ To test the true generalization of both models, we evaluated them on a strictly 
 
 ![QNN Confusion Matrix](qnn_confusion_matrix.png)
 
-### The Hidden Victory: The Quantum Sensitivity Shift
-
-While the classical model achieved a slightly higher raw accuracy (71.69% vs 69.31%), an analysis of the Confusion Matrices reveals a fascinating shift in the QNN's decision boundary regarding **Recall (Sensitivity)**.
+While the classical model achieved a slightly higher raw accuracy (71.69% vs 69.31%), an analysis of the Confusion Matrices reveals an interesting observation in the QNN's decision boundary regarding **Recall (Sensitivity)**.
 
 * **Classical Malignant Recall:** Successfully caught **67%** of actual cancers.
 * **Quantum Malignant Recall:** Successfully caught **73%** of actual cancers.
 
 In medical machine learning, missing a malignant tumor (False Negative) is vastly more dangerous than a False Positive. The Hybrid QNN naturally sacrificed a small amount of precision to become significantly more sensitive to the minority class (Malignant features).
 
-**Conclusion:** Squeezing a 2048-dimensional vector into an 8-qubit variational circuit does not yield magical 97% accuracies. However, the quantum state space naturally aligned to be far more sensitive to critical cancer features. In a medical context where False Negatives are fatal, this quantum sensitivity shift warrants serious further investigation.
+**Conclusion:** Squeezing a 2048-dimensional vector into an 8-qubit variational circuit did not yield 97% accuracies. However, the quantum state space naturally aligned to be far more sensitive to critical cancer features. In a medical context where False Negatives are fatal, this quantum sensitivity shift encourages further investigation.
 
 ---
 
@@ -93,25 +96,22 @@ In medical machine learning, missing a malignant tumor (False Negative) is vastl
    ```bash
    pip install torch torchvision pandas pennylane matplotlib scikit-learn seaborn
    ```
-
-2. Download the CBIS-DDSM dataset from Kaggle. Place the images in `./archive/jpeg/` and the CSVs in `./archive/csv/`.
-3. Run the pipeline sequentially:
-
-   ```bash
+2. Run the pipeline sequentially:
+```python
    # 1. Prep the Data
    python db_preprocess.py
    python db_preprocess_test.py
    python dataset_gen.py
    python data_verify.py
-   
+
    # 2. Train the Models
    python resnet152.py
    python qnn.py
-   
+
    # 3. Evaluate & Generate Graphs
    python perf_comparision.py
    python classical_inference.py
    python qnn_inference.py
-   ```
+```
 
-   *(Note: You can answer `y` to the prompt in the scripts to run a fast 20-image test mode before committing to the full dataset).*
+(Note: You can answer y to the prompt in the scripts to run a fast 20-image test mode before committing to the full dataset).
