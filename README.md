@@ -13,7 +13,7 @@ Because full breast mammograms contain massive amounts of empty space, our pipel
 * **Classes:** Benign (1) vs. Malignant (0).
 * **Format:** DICOM paths mapped to high-resolution JPEGs.
 
-> **Note on Data Access:** To run this repository, you must download the Kaggle JPEG version of the CBIS-DDSM dataset. Extract the downloaded folder and place the `jpeg/` and `csv/` directories inside an `./archive/` folder in the root of this project.
+> **Note on Data Access:** To run this repository, you must download the [CBIS-DDSM dataset from Kaggle](https://www.kaggle.com/datasets/awsaf49/cbis-ddsm-breast-cancer-image-dataset). Extract the downloaded folder and place the `jpeg/` and `csv/` directories inside an `./archive/` folder in the root of this project.
 
 ### Example Tissue Crops
 
